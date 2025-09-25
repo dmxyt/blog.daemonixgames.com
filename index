@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog - DaemonixGames.com</title>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family: 'Poppins', sans-serif; background:#0a0a0f; color:#fff; }
+
+    header {
+      display:flex; justify-content:space-between; align-items:center;
+      padding:1rem 2rem; background:rgba(10,10,15,0.8);
+      backdrop-filter:blur(6px); position:fixed; top:0; width:100%; z-index:1000;
+    }
+    .logo {
+      font-size:1.6rem; font-weight:bold;
+      background:linear-gradient(90deg, #ff00ff, #00ffff);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    }
+
+    main { padding-top:6rem; max-width:1200px; margin:auto; padding:0 1rem; }
+
+    h1 {
+      font-size:2.5rem; text-align:center; margin-bottom:0.5rem;
+      background:linear-gradient(90deg, #ff00ff, #00ffff);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      animation: glow 2s infinite alternate; margin-top:1rem;
+    }
+    @keyframes glow { from { text-shadow:0 0 10px #ff00ff; } to { text-shadow:0 0 25px #00ffff; } }
+
+    p.description { text-align:center; color:#ccc; margin-bottom:2rem; font-size:1.1rem; }
+
+    .blog-cards {
+      display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+      gap:1.5rem; margin-bottom:3rem;
+    }
+
+    .card {
+      background:#151525; border-radius:15px; overflow:hidden; position:relative;
+      cursor:pointer; transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border:2px solid transparent; background-clip:padding-box;
+    }
+    .card::before {
+      content:""; position:absolute; inset:0; border-radius:15px; padding:2px;
+      background:linear-gradient(135deg,#ff00ff,#00ffff);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: destination-out; mask-composite: exclude; pointer-events:none;
+    }
+    .card:hover { transform:translateY(-10px) scale(1.03); box-shadow:0 0 20px #ff00ff,0 0 30px #00ffff; }
+    .card img { width:100%; height:160px; object-fit:cover; }
+    .card-content { padding:1rem; }
+    .card-content h2 {
+      font-size:1.2rem; margin-bottom:0.5rem;
+      background:linear-gradient(90deg,#ff00ff,#00ffff);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    }
+    .card-content p { font-size:0.95rem; color:#ccc; margin-bottom:0.5rem; }
+    .card-content .meta { font-size:0.8rem; color:#888; margin-bottom:0.5rem; }
+    .tags { display:flex; gap:5px; flex-wrap:wrap; margin-bottom:0.5rem; }
+    .tags span {
+      font-size:0.75rem; color:#0a0a0f;
+      background:linear-gradient(90deg,#ff00ff,#00ffff);
+      padding:2px 6px; border-radius:5px;
+    }
+
+    .read-more {
+      display:inline-block; margin-top:5px; padding:5px 10px;
+      background:linear-gradient(90deg,#ff00ff,#00ffff); color:#0a0a0f; border-radius:5px;
+      cursor:pointer; font-weight:bold; transition:transform 0.2s ease;
+    }
+    .read-more:hover { transform:scale(1.05); }
+
+    /* Popup subpage */
+    .popup {
+      position:fixed; top:0; left:0; width:100%; height:100%;
+      background:rgba(0,0,0,0.95); display:flex; justify-content:center; align-items:center;
+      opacity:0; pointer-events:none; transition:opacity 0.3s ease;
+      z-index:5000; overflow-y:auto; padding:2rem;
+    }
+    .popup.active { opacity:1; pointer-events:auto; }
+    .popup-content {
+      background:#151525; padding:2rem; border-radius:15px; max-width:800px; width:100%;
+      position:relative; box-shadow:0 0 20px #ff00ff,0 0 30px #00ffff;
+      border:2px solid transparent; background-clip:padding-box;
+    }
+    .popup-content h2 {
+      font-size:2rem; margin-bottom:1rem;
+      background:linear-gradient(90deg,#ff00ff,#00ffff);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    }
+    .popup-content p { margin-bottom:1rem; color:#ccc; line-height:1.5; }
+    .popup-content img { width:100%; margin:1rem 0; border-radius:10px; }
+
+    .close-btn {
+      position:absolute; top:15px; right:20px; font-size:2rem; color:#ff00ff;
+      cursor:pointer; font-weight:bold;
+    }
+    .close-btn:hover { color:#00ffff; }
+
+    footer {
+      margin-top:3rem; padding:20px;
+      background:linear-gradient(90deg, rgba(255,0,255,0.08), rgba(0,255,255,0.08));
+      text-align:center; border-top:2px solid transparent;
+      border-image:linear-gradient(90deg,#ff00ff,#00ffff) 1;
+    }
+    footer p { font-size:0.9rem; color:#aaa; }
+  </style>
+</head>
+<body>
+  <header><div class="logo">DaemonixGames.com</div></header>
+  <main>
+      <h1>Blog</h1>
+    <p class="description">Últimas noticias, reviews y guías del universo gamer</p>
+
+    <div class="blog-cards">
+      <!-- 1. Bienvenida -->
+      <div class="card" onclick="openPopup('welcome')">
+        <img src="https://cdn.jsdelivr.net/gh/dmxyt/dmx@37aaaefa029d3fbc0e4b5b66e6d6b69d4d7ce350/file_00000000987061f9bef2eed150ca945c.png" alt="Bienvenida">
+        <div class="card-content">
+          <h2>¡Bienvenido a DaemonixGames!</h2>
+          <div class="meta">Autor: Alexios | Fecha: 19 Sep 2025</div>
+          <div class="tags">
+            <span>Bienvenida</span>
+            <span>Noticias</span>
+            <span>Gamer</span>
+          </div>
+          <p>Descubre nuestro universo gamer. Haz clic en leer más para explorar.</p>
+          <div class="read-more">Leer más</div>
+        </div>
+      </div>
+
+      <!-- 2. Xbox 360 -->
+      <div class="card" onclick="openPopup('mdj')">
+        <img src="https://cdn.jsdelivr.net/gh/dmxyt/dmx@37aaaefa029d3fbc0e4b5b66e6d6b69d4d7ce350/20250919_063149.png" alt="Xbox 360">
+        <div class="card-content">
+          <h2>Métodos Juegos Xbox 360</h2>
+          <div class="meta">Autor: Alexios | Fecha: 19 Sep 2025</div>
+          <div class="tags">
+            <span>Xbox 360</span>
+            <span>Métodos</span>
+            <span>Juegos</span>
+          </div>
+          <p>Aprende los mejores métodos para jugar y compartir tus juegos de Xbox 360.</p>
+          <div class="read-more">Leer más</div>
+        </div>
+      </div>
+
+      <!-- Puedes agregar más cards como antes... -->
+    </div>
+  </main>
+
+  <!-- POPUPS -->
+  <!-- Popup Bienvenida -->
+  <div class="popup" id="welcome">
+    <div class="popup-content">
+      <span class="close-btn" onclick="closePopup('welcome')">×</span>
+      <h2>¡Bienvenido a DaemonixGames!</h2>
+      <p>Estamos muy emocionados de tenerte en nuestra comunidad gamer. Aquí encontrarás noticias, de nuestras cuentas, guías y todo lo que nuestros gamers necesitan.</p>
+      <img src="https://cdn.jsdelivr.net/gh/dmxyt/dmx@37aaaefa029d3fbc0e4b5b66e6d6b69d4d7ce350/file_00000000987061f9bef2eed150ca945c.png" alt="Gaming"><p>Nuestro objetivo es crear un espacio donde los jugadores puedan descubrir nuevos juegos, estrategias y compartir experiencias únicas.</p>
+      <img src="https://cdn.jsdelivr.net/gh/dmxyt/dmx@37aaaefa029d3fbc0e4b5b66e6d6b69d4d7ce350/20250919_063149.png" alt="Comunidad">
+      <p>Explora nuestras secciones, participa en la comunidad y mantente al día con las últimas novedades de nuestra comunidad.</p>
+    </div>
+  </div>
+
+  <!-- Popup Xbox 360 -->
+  <div class="popup" id="mdj">
+    <div class="popup-content">
+      <span class="close-btn" onclick="closePopup('mdj')">×</span>
+      <h2>Métodos Juegos Xbox 360</h2>
+      <p>Descubre cómo aprovechar al máximo nuestros juegos de Xbox 360. Con nuestras cuentas,y estos métodos aprenderás a instalar DLCs y mucho más.</p>
+      <h2>Totalmente Gratis</h2>
+      <img src="https://cdn.jsdelivr.net/gh/dmxyt/dmx@37aaaefa029d3fbc0e4b5b66e6d6b69d4d7ce350/20250919_063149.png" alt="Xbox 360">
+      <p>Guías detalladas para principiantes y expertos, incluyendo trucos recomendados.</p>
+      <a href="https://daemonixgames.com/mdj.html">Haz click aquí para ver los métodos de juegos</a>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 DaemonixGames.us — Todos los derechos reservados</p>
+  </footer>
+
+  <script>
+    lucide.createIcons();
+
+    function openPopup(id) {
+      document.getElementById(id).classList.add('active');
+    }
+
+    function closePopup(id) {
+      document.getElementById(id).classList.remove('active');
+    }
+
+    // Cerrar popup al hacer clic fuera del contenido
+    document.querySelectorAll('.popup').forEach(popup => {
+      popup.addEventListener('click', e => {
+        if (e.target === popup) {
+          popup.classList.remove('active');
+        }
+      });
+    });
+
+    // Cerrar popup con tecla ESC
+    document.addEventListener('keydown', e => {
+      if (e.key === "Escape") {
+        document.querySelectorAll('.popup.active').forEach(popup => {
+          popup.classList.remove('active');
+        });
+      }
+    });
+  </script>
+</body>
+</html>
